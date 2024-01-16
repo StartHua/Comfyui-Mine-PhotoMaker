@@ -12,6 +12,8 @@
 
 5.第一运行会默认下载模型SG161222/RealVisXL_V3.0缓存到modes目录
 
+6.注意触发词trigger_word 在正向提示词里面只能出现一次（人家就是这样设计的没辙）
+
 ![2a5c49370b7b7ac3571e62323f66a4a](https://github.com/StartHua/Comfyui-Mine-PhotoMaker/assets/22284244/55b22806-67e6-49d6-a29d-fb016e57fddb)
 
 
