@@ -32,6 +32,8 @@ class CXH_PhotoMaker:
         return {"required":
                 {   
                 "image":("IMAGE", {"default": "","multiline": False}),
+                "num_steps":("INT", {"default":50, "min": 20, "max": 100}),  
+                "style_strength_ratio":("INT", {"default":20, "min": 15, "max": 50}),  
                 "trigger_word": ("STRING", {"default": "img","multiline": False}),
                 "base_model_path": ("STRING", {"default": "SG161222/RealVisXL_V3.0","multiline": False}),             
                 "positive": ("STRING", {"default": "UHD, 8K, ultra detailed, a cinematic photograph of a girl img wearing the sunglasses in Iron man suit , beautiful lighting, great composition","multiline": True}),
@@ -48,6 +50,8 @@ class CXH_PhotoMaker:
 
     def sample(self,
                 image,
+                num_steps,
+                style_strength_ratio,
                 trigger_word,
                 base_model_path,
                 positive,
@@ -79,8 +83,10 @@ class CXH_PhotoMaker:
         input_id_images = []
         input_id_images.append(tensor2pil(image))
     
-        num_steps = 50
-        start_merge_step = 30
+        start_merge_step = int(float(style_strength_ratio) / 100 * num_steps)
+        if start_merge_step > 30:
+            start_merge_step = 30
+            
         num_images = len(input_id_images)
         
         images = self.pipe(
