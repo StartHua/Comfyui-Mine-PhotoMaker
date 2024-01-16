@@ -24,6 +24,7 @@ photomaker_ckpt = hf_hub_download(repo_id="TencentARC/PhotoMaker", filename="pho
 class CXH_PhotoMaker:
    
     def __init__(self):
+        self.cur_model_path = None
         self.pipe = None
     
     @classmethod
@@ -53,7 +54,7 @@ class CXH_PhotoMaker:
                 negative,
                 seed):
         
-        if self.pipe == None:
+        if self.pipe == None or self.cur_model_path == None or self.cur_model_path != base_model_path:
             self.pipe = PhotoMakerStableDiffusionXLPipeline.from_pretrained(
                 base_model_path, 
                 torch_dtype=torch.bfloat16, 
@@ -70,6 +71,8 @@ class CXH_PhotoMaker:
             )  
             
             self.pipe.fuse_lora() 
+        
+        self.cur_model_path = base_model_path
         
         generator = torch.Generator(device=device).manual_seed(seed)
         
