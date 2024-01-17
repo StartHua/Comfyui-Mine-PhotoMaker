@@ -10,10 +10,14 @@ import numpy as np
 import folder_paths
 from PIL import Image
 
+
+import time
+
 comfy_path = os.path.dirname(folder_paths.__file__)
 custom_nodes_path = os.path.join(comfy_path, "custom_nodes")
 photoMaker_path = os.path.join(custom_nodes_path, "Comfyui-Mine-PhotoMaker")
 cache_dir = os.path.join(photoMaker_path, "modes")
+save_dir = os.path.join(photoMaker_path, "images")
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -35,6 +39,8 @@ class CXH_PhotoMaker_Batch:
                 "num_steps":("INT", {"default":50, "min": 20, "max": 100}),  
                 "style_strength_ratio":("INT", {"default":20, "min": 15, "max": 50}),  
                 "guidance_scale":("INT", {"default":5, "min": 0.1, "max": 10}),  
+                "out_number":("INT", {"default":1, "min": 1, "max": 50}),  
+                "open_save":("INT", {"default":1, "min": 0, "max": 1}),   # 0 不缓存，1缓存
                 "trigger_word": ("STRING", {"default": "img","multiline": False}),
                 "base_model_path": ("STRING", {"default": "SG161222/RealVisXL_V3.0","multiline": False}),             
                 "positive": ("STRING", {"default": "UHD, 8K, ultra detailed, a cinematic photograph of a girl img wearing the sunglasses in Iron man suit , beautiful lighting, great composition","multiline": True}),
@@ -44,7 +50,7 @@ class CXH_PhotoMaker_Batch:
         }
 
     RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_NAMES = ("images",)
     OUTPUT_NODE = True
     FUNCTION = "sample"
     CATEGORY = "CXH"
@@ -54,6 +60,8 @@ class CXH_PhotoMaker_Batch:
                 num_steps,
                 style_strength_ratio,
                 guidance_scale,
+                out_number,
+                open_save,
                 trigger_word,
                 base_model_path,
                 positive,
@@ -93,7 +101,7 @@ class CXH_PhotoMaker_Batch:
         if start_merge_step > 30:
             start_merge_step = 30
             
-        num_images = 1
+        num_images = out_number
         
         images = self.pipe(
             prompt=positive,
@@ -105,6 +113,15 @@ class CXH_PhotoMaker_Batch:
             generator=generator,
             guidance_scale=guidance_scale,
         ).images
+        
+        if open_save == 1:
+            # 获取当前时间
+            t = time.time()  # 当前时间
+            t = int(t)
+            os.makedirs(save_dir, exist_ok=True)
+            for idx, image in enumerate(images):
+                t = t + idx
+                image.save(os.path.join(save_dir, f"{t}_{idx:02d}.png"))
         
         out_images = []
         for img in images:
