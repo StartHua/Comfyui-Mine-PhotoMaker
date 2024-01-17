@@ -34,6 +34,7 @@ class CXH_PhotoMaker:
                 "image":("IMAGE", {"default": "","multiline": False}),
                 "num_steps":("INT", {"default":50, "min": 20, "max": 100}),  
                 "style_strength_ratio":("INT", {"default":20, "min": 15, "max": 50}),  
+                "guidance_scale":("INT", {"default":5, "min": 0.1, "max": 10}),  
                 "trigger_word": ("STRING", {"default": "img","multiline": False}),
                 "base_model_path": ("STRING", {"default": "SG161222/RealVisXL_V3.0","multiline": False}),             
                 "positive": ("STRING", {"default": "UHD, 8K, ultra detailed, a cinematic photograph of a girl img wearing the sunglasses in Iron man suit , beautiful lighting, great composition","multiline": True}),
@@ -52,6 +53,7 @@ class CXH_PhotoMaker:
                 image,
                 num_steps,
                 style_strength_ratio,
+                guidance_scale,
                 trigger_word,
                 base_model_path,
                 positive,
@@ -97,6 +99,7 @@ class CXH_PhotoMaker:
             num_inference_steps=num_steps,
             start_merge_step=start_merge_step,
             generator=generator,
+            guidance_scale=guidance_scale,
         ).images
         
         return (pil2tensor(images[0]),num_images)
