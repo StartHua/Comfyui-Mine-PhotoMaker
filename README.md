@@ -17,4 +17,8 @@
 ![2a5c49370b7b7ac3571e62323f66a4a](https://github.com/StartHua/Comfyui-Mine-PhotoMaker/assets/22284244/55b22806-67e6-49d6-a29d-fb016e57fddb)
 
 
+![1705480881592](https://github.com/StartHua/Comfyui-Mine-PhotoMaker/assets/22284244/cc0e6240-c640-4872-954b-025b76ae8f97)
+
+
+
 ![267f9edcdce7a5ead7084b3ac5b6e30](https://github.com/StartHua/Comfyui-Mine-PhotoMaker/assets/22284244/e2755b9a-6063-42dd-8b91-f44915a88c42)
