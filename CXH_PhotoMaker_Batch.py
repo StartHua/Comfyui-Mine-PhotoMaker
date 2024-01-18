@@ -46,8 +46,8 @@ class CXH_PhotoMaker_Batch:
                 "positive": ("STRING", {"default": "UHD, 8K, ultra detailed, a cinematic photograph of a girl img wearing the sunglasses in Iron man suit , beautiful lighting, great composition","multiline": True}),
                 "negative": ("STRING", {"default": "ugly, deformed, noisy, blurry, NSFW", "multiline": True}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 99999999}),
-                "width": ("INT", {"default": 1024, "min": 512, "max": 2048}),
-                "height": ("INT", {"default": 1024, "min": 512, "max": 2048}),   
+                "width": ("INT", {"default": 1024, "min": 512, "max": 2048, "step": 32}),
+                "height": ("INT", {"default": 1024, "min": 512, "max": 2048, "step": 32}),   
                 }
         }
 
