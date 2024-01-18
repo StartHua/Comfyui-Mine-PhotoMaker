@@ -95,8 +95,9 @@ class CXH_PhotoMaker_Batch:
         generator = torch.Generator(device=device).manual_seed(seed)
         
         image_basename_list = os.listdir(dir_path)
-        image_path_list = sorted([os.path.join(dir_path, basename) for basename in image_basename_list])
-        
+        image_path_list = [os.path.join(dir_path, basename) for basename in image_basename_list if os.path.isfile(os.path.join(dir_path, basename))]
+        image_path_list = sorted(image_path_list)
+
         input_id_images = []
         for image_path in image_path_list:
             input_id_images.append(load_image(image_path))
