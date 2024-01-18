@@ -45,7 +45,9 @@ class CXH_PhotoMaker_Batch:
                 "base_model_path": ("STRING", {"default": "SG161222/RealVisXL_V3.0","multiline": False}),             
                 "positive": ("STRING", {"default": "UHD, 8K, ultra detailed, a cinematic photograph of a girl img wearing the sunglasses in Iron man suit , beautiful lighting, great composition","multiline": True}),
                 "negative": ("STRING", {"default": "ugly, deformed, noisy, blurry, NSFW", "multiline": True}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 99999999}),       
+                "seed": ("INT", {"default": 0, "min": 0, "max": 99999999}),
+                "width": ("INT", {"default": 1024, "min": 512, "max": 2048, "step": 32}),
+                "height": ("INT", {"default": 1024, "min": 512, "max": 2048, "step": 32}),   
                 }
         }
 
@@ -66,7 +68,9 @@ class CXH_PhotoMaker_Batch:
                 base_model_path,
                 positive,
                 negative,
-                seed):
+                seed,
+                width,
+                height):
         
         if self.pipe == None or self.cur_model_path == None or self.cur_model_path != base_model_path:
             self.pipe = PhotoMakerStableDiffusionXLPipeline.from_pretrained(
@@ -91,8 +95,9 @@ class CXH_PhotoMaker_Batch:
         generator = torch.Generator(device=device).manual_seed(seed)
         
         image_basename_list = os.listdir(dir_path)
-        image_path_list = sorted([os.path.join(dir_path, basename) for basename in image_basename_list])
-        
+        image_path_list = [os.path.join(dir_path, basename) for basename in image_basename_list if os.path.isfile(os.path.join(dir_path, basename))]
+        image_path_list = sorted(image_path_list)
+
         input_id_images = []
         for image_path in image_path_list:
             input_id_images.append(load_image(image_path))
@@ -112,6 +117,8 @@ class CXH_PhotoMaker_Batch:
             start_merge_step=start_merge_step,
             generator=generator,
             guidance_scale=guidance_scale,
+            width=width,
+            height=height
         ).images
         
         if open_save == 1:
