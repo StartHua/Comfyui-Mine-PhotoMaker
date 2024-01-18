@@ -39,7 +39,9 @@ class CXH_PhotoMaker:
                 "base_model_path": ("STRING", {"default": "SG161222/RealVisXL_V3.0","multiline": False}),             
                 "positive": ("STRING", {"default": "UHD, 8K, ultra detailed, a cinematic photograph of a girl img wearing the sunglasses in Iron man suit , beautiful lighting, great composition","multiline": True}),
                 "negative": ("STRING", {"default": "ugly, deformed, noisy, blurry, NSFW", "multiline": True}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 99999999}),       
+                "seed": ("INT", {"default": 0, "min": 0, "max": 99999999}),
+                "width": ("INT", {"default": 1024, "min": 512, "max": 2048}),
+                "height": ("INT", {"default": 1024, "min": 512, "max": 2048}),     
                 }
         }
 
@@ -58,7 +60,9 @@ class CXH_PhotoMaker:
                 base_model_path,
                 positive,
                 negative,
-                seed):
+                seed,
+                width,
+                height):
         
         if self.pipe == None or self.cur_model_path == None or self.cur_model_path != base_model_path:
             self.pipe = PhotoMakerStableDiffusionXLPipeline.from_pretrained(
@@ -100,6 +104,8 @@ class CXH_PhotoMaker:
             start_merge_step=start_merge_step,
             generator=generator,
             guidance_scale=guidance_scale,
+            width=width,
+            height=height
         ).images
         
         return (pil2tensor(images[0]),num_images)
